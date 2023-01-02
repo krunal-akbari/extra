@@ -1,5 +1,8 @@
-from pytube import YouTube
+import pytube
+import os
 import sys
+import json
+
 l = sys.argv
 
 class Music:
@@ -10,34 +13,57 @@ class Music:
     """
 
     def __init__(self) -> None:
-        self.types=  dict()
+        self.types = json.load(open("list.json","r"))
 
-    def DictMaker(self):
-        with open("types.txt") as file:
-            for x in file:
-                a = x.strip().split()
-                with open(a[1]) as f:
-                    songs = dict()
-                    for x in f.readlines():
-                        x  = x.split('|')
-                        songs[x[0].strip()]= x[1].strip()
-                self.types[a[0]] = songs
+    def Insert(self):
+        song_type = input("Enter the type of song: ")
+        song_name = input("Enter the name of song: ")
+        song_url = input("Enter the url of song: ")
+        self.types[song_url] = {song_type:song_name}
+        json.dump(self.types,open("list.json","w"))
 
-        
-    def Url(self):
-        if  not self.types :
-            self.DictMaker()
-        for _ in self.types:
-            for x in self.types[_]:
-                self.SongDownloader(self.types[_][x],_)
- 
-    def SongDownloader(self,url,folder):
-        yt = YouTube(url)
-        print(yt.title)
-        yt.streams.filter(only_audio=True).first().download("songs/" + folder)
 
-if len(l) >=2 :
-    if "download" in l:
-        test = Music()  
-        test.Url()
+    def Url(self,bool):
+        temp = self.list_song()
+        if bool:
+            for _ in self.types:
+                for x in self.types[_]:
+                    if self.types[_][x] in temp:
+                        pass
+                    else:
+                        print(f"'{self.types[_][x]}' is downloding")
+                        self.SongDownloader(_,x,self.types[_][x]) if bool else None
+                        print("Downloaded")
 
+
+    @staticmethod
+    def SongDownloader(url,path,name):
+        yt = pytube.YouTube(url)
+        yt.streams.filter(only_audio=True).first().download("songs/" + path,filename=name)
+
+    @staticmethod
+    def ClearFolder():
+        os.system("rm -rf songs/*")
+
+    def list_song(self):
+        songs_name = list()
+        for x in os.listdir("songs/"):
+            songs_name += os.listdir("songs/" + x)
+        return songs_name
+
+
+
+def main():
+    test = Music()
+    if len(l) >=2 :
+
+        if "download" in l:
+            test.Url(True)
+        elif "clear" in l:
+            test.ClearFolder()
+        elif "list" in l:
+            print(test.list_song())
+        elif "insert" in l:
+            test.Insert()
+
+main()
