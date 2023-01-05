@@ -51,6 +51,15 @@ class Music:
             songs_name += os.listdir("songs/" + x)
         return songs_name
 
+    def Diffrece(self):
+        temp = self.list_song()
+        for _ in self.types:
+            for x in self.types[_]:
+                if self.types[_][x] in temp:
+                    pass
+                else:
+                    print(f"'{self.types[_][x]}' is not downloaded")
+
 
 
 def main():
@@ -65,5 +74,7 @@ def main():
             print(test.list_song())
         elif "insert" in l:
             test.Insert()
+        elif "diff" in l:
+            test.Diffrece()
 
 main()
