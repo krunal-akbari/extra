@@ -1,1 +1,8 @@
 */songs/
+
+#rust
+**/Cargo.lock
+**//*.rs.bk
+**/debug/
+**/target/
+**/*.pdb
