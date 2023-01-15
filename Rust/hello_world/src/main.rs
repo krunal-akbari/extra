@@ -1,4 +1,2 @@
-fn main() {
-    print!("printing ghello working")
-}
+fn main() {}
 
