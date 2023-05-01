@@ -5,6 +5,7 @@ import json
 
 l = sys.argv
 
+
 class Music:
 
     """
@@ -13,17 +14,16 @@ class Music:
     """
 
     def __init__(self) -> None:
-        self.types = json.load(open("list.json","r"))
+        self.types = json.load(open("list.json", "r"))
 
     def Insert(self):
         song_type = input("Enter the type of song: ")
         song_name = input("Enter the name of song: ")
         song_url = input("Enter the url of song: ")
-        self.types[song_url] = {song_type:song_name}
-        json.dump(self.types,open("list.json","w"))
+        self.types[song_url] = {song_type: song_name}
+        json.dump(self.types, open("list.json", "w"))
 
-
-    def Url(self,bool):
+    def Url(self, bool):
         temp = self.list_song()
         if bool:
             for _ in self.types:
@@ -32,14 +32,15 @@ class Music:
                         pass
                     else:
                         print(f"'{self.types[_][x]}' is downloding")
-                        self.SongDownloader(_,x,self.types[_][x]) if bool else None
+                        self.SongDownloader(
+                            _, x, self.types[_][x]) if bool else None
                         print("Downloaded")
 
-
     @staticmethod
-    def SongDownloader(url,path,name):
+    def SongDownloader(url, path, name):
         yt = pytube.YouTube(url)
-        yt.streams.filter(only_audio=True).first().download("songs/" + path,filename=name)
+        yt.streams.filter(only_audio=True).first().download(
+            "songs/" + path, filename=name)
 
     @staticmethod
     def ClearFolder():
@@ -48,7 +49,7 @@ class Music:
     def list_song(self):
         songs_name = list()
         for x in os.listdir("songs/"):
-            songs_name += os.listdir("songs/" + x)
+            songs_name += os.listdir("/songs/" + x)
         return songs_name
 
     def Diffrece(self):
@@ -61,10 +62,9 @@ class Music:
                     print(f"'{self.types[_][x]}' is not downloaded")
 
 
-
 def main():
     test = Music()
-    if len(l) >=2 :
+    if len(l) >= 2:
 
         if "download" in l:
             test.Url(True)
@@ -76,5 +76,6 @@ def main():
             test.Insert()
         elif "diff" in l:
             test.Diffrece()
+
 
 main()
